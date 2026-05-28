@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Inquiries are routed here via a client-side mailto handoff.
+// Replace with a real Formspree / Web3Forms / Cloudflare Workers endpoint when ready.
+const CONTACT_EMAIL = 'lenora@lgvallc.com';
+---
+
+<BaseLayout
+  title="Contact — Lenora Gray"
+  description="Get in touch with Lenora Gray for talks, teaching engagements, or collaboration."
+  current="contact"
+>
+  <div class="contact-intro">
+    <h1>Contact</h1>
+    <p class="lead">
+      The form below is the fastest way to reach me — for collaborations, invited talks, teaching engagements, or to ask about the research. I usually reply within a few days.
+    </p>
+  </div>
+
+  <form class="contact-form" id="contact-form" data-to={CONTACT_EMAIL} novalidate>
+    <div class="form-head">
+      <h2>Send a message</h2>
+      <p>Goes straight to my inbox. Including the audience, format, and date range for talk invitations helps me get back with a useful answer quickly.</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="cf-name">Your name</label>
+        <input id="cf-name" name="name" type="text" required autocomplete="name" />
+      </div>
+      <div class="form-field">
+        <label for="cf-email">Your email</label>
+        <input id="cf-email" name="email" type="email" required autocomplete="email" />
+      </div>
+      <div class="form-field">
+        <label for="cf-topic">Topic</label>
+        <select id="cf-topic" name="topic">
+          <option>Speaking invitation</option>
+          <option>Teaching / curriculum</option>
+          <option>Research collaboration</option>
+          <option>Press or media</option>
+          <option>General question</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="cf-subject">Subject</label>
+        <input id="cf-subject" name="subject" type="text" placeholder="A short summary" />
+      </div>
+      <div class="form-field full">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" rows="6" required placeholder="What's on your mind?"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="form-submit">
+        <svg viewBox="0 0 16 16"><path d="M2 8h11M9 4l4 4-4 4" /></svg>
+        Send message
+      </button>
+      <span class="form-hint">Opens your email client with the message prefilled.</span>
+    </div>
+    <div class="form-status" role="status" aria-live="polite"></div>
+  </form>
+
+  <h2 class="elsewhere-h">Elsewhere</h2>
+  <div class="contact-grid">
+    <div class="channel">
+      <span class="key">Google Scholar</span>
+      <a class="value" href="https://scholar.google.com/citations?view_op=list_works&hl=en&authuser=2&hl=en&user=3nzKUK4AAAAJ&authuser=2">scholar.google.com/lenoragray</a>
+      <span class="hint">Citations, papers, and metrics.</span>
+    </div>
+    <div class="channel">
+      <span class="key">GitHub</span>
+      <a class="value" href="https://github.com/lenoradgray">github.com/lenoradgray</a>
+      <span class="hint">Reproductions, notebooks, and tutorials.</span>
+    </div>
+    <div class="channel">
+      <span class="key">LinkedIn</span>
+      <a class="value" href="https://www.linkedin.com/in/lenorag/">linkedin.com/in/lenoragray</a>
+      <span class="hint">Professional history and updates.</span>
+    </div>
+    <div class="channel">
+      <span class="key">ORCID</span>
+      <a class="value" href="https://orcid.org/0009-0008-4312-8780" target="_blank" rel="noopener">0009-0008-4312-8780</a>
+      <span class="hint">Researcher identifier.</span>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Client-side mailto handoff. Swap with a fetch() to your form endpoint if you'd
+  // prefer a real backend (Formspree, Web3Forms, Cloudflare Workers, etc.).
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  if (form) {
+    const status = form.querySelector<HTMLDivElement>('.form-status')!;
+    const TO = form.dataset.to || '';
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const name    = (fd.get('name')    || '').toString().trim();
+      const email   = (fd.get('email')   || '').toString().trim();
+      const topic   = (fd.get('topic')   || '').toString().trim();
+      const subject = (fd.get('subject') || '').toString().trim();
+      const message = (fd.get('message') || '').toString().trim();
+
+      if (!name || !email || !message) {
+        status.style.color = 'var(--accent)';
+        status.textContent = 'Please fill in your name, email, and message.';
+        return;
+      }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        status.style.color = 'var(--accent)';
+        status.textContent = 'That email address doesn\u2019t look right.';
+        return;
+      }
+
+      const subj = subject ? `[${topic}] ${subject}` : `[${topic}] from ${name}`;
+      const body = `${message}\n\n\u2014 ${name} <${email}>`;
+      const url = `mailto:${TO}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+
+      status.style.color = 'var(--heading)';
+      status.textContent = 'Opening your email client\u2026';
+      window.location.href = url;
+    });
+  }
+</script>
+
+<style>
+  h1 { font-size: clamp(36px, 4.5vw, 48px); margin: 0 0 24px; }
+  .contact-intro { max-width: 58ch; margin-bottom: 8px; }
+  .contact-intro .lead {
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .contact-form {
+    margin-top: 64px;
+    padding: 36px 0 0;
+    border-top: 0.5px solid var(--border);
+  }
+  .form-head { margin-bottom: 28px; }
+  .form-head h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(22px, 2.6vw, 28px);
+    color: var(--heading);
+    margin: 0 0 10px;
+  }
+  .form-head p {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    max-width: 58ch;
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+    max-width: 720px;
+  }
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+  .form-field.full { grid-column: 1 / -1; }
+  .form-field label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-bottom: 0.5px solid var(--sand);
+    padding: 8px 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+    width: 100%;
+    border-radius: 0;
+    transition: border-color 0.15s;
+  }
+  .form-field textarea { resize: vertical; min-height: 100px; }
+  .form-field input::placeholder,
+  .form-field textarea::placeholder {
+    color: var(--sand);
+    font-style: italic;
+  }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    border-bottom-color: var(--accent);
+    outline: none;
+  }
+
+  .form-actions {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .form-submit {
+    appearance: none;
+    border: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: var(--forest);
+    color: var(--cream);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .form-submit:hover { background: #234035; }
+  .form-submit svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+  .form-hint {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .form-status {
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--heading);
+    min-height: 16px;
+  }
+
+  .elsewhere-h {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--heading);
+    margin: 80px 0 4px;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 48px;
+    margin-top: 36px;
+  }
+  .channel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 22px 0;
+    border-top: 0.5px solid var(--border);
+  }
+  .channel .key {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .channel .value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--heading);
+    line-height: 1.3;
+    text-decoration: none;
+    word-break: break-word;
+    border-bottom: 0.5px solid transparent;
+    width: fit-content;
+    padding-bottom: 2px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  a.value:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .channel .hint { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>

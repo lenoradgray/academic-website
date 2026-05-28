@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  talk: CollectionEntry<'talks'>;
+}
+const { talk } = Astro.props;
+const d = talk.data;
+
+const typeLabel = {
+  keynote:  'Keynote',
+  talk:     'Conference talk',
+  panel:    'Panel',
+  workshop: 'Workshop',
+  tutorial: 'Tutorial',
+  invited:  'Invited talk',
+  podcast:  'Podcast',
+}[d.type];
+---
+
+<article class="entry">
+  <div class="entry-meta">
+    <span class="year">{d.year}</span>
+    {d.dateLabel}<br />
+    {d.location}
+  </div>
+  <div class="entry-body">
+    <div class="entry-badges">
+      <span class="badge badge--type">{typeLabel}</span>
+      {d.upcoming && <span class="badge badge--upcoming">Upcoming</span>}
+      {d.featured && <span class="badge badge--featured">Featured</span>}
+      <span class="badge badge--venue">{d.event}</span>
+    </div>
+    <h3 class="entry-title">{d.title}</h3>
+    {d.description && <p class="entry-desc">{d.description}</p>}
+
+    <div class="entry-links">
+      {d.links.event && <a href={d.links.event}>Event page</a>}
+      {d.links.slides && <a href={d.links.slides}>Slides</a>}
+      {d.links.paper && <a href={d.links.paper}>Paper</a>}
+      {d.links.listen && <a href={d.links.listen}>Listen</a>}
+      {d.links.calendar && <a href={d.links.calendar}>Add to calendar</a>}
+    </div>
+  </div>
+</article>

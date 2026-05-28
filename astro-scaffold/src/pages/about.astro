@@ -1,0 +1,267 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About — Lenora Gray"
+  description="Biography, education, experience, awards, and CV of Lenora Gray."
+  current="about"
+>
+  <div class="about-intro">
+    <h1>About</h1>
+
+    <p class="lead-bio">
+      I'm a data scientist and applied AI researcher working at the intersection of information retrieval, machine learning, and legal practice.
+    </p>
+
+    <div class="prose">
+      <p>
+        My work centers on technology-assisted review and high-recall retrieval — methods for finding nearly every relevant document in a large collection with provable statistical guarantees. I publish primarily in <a href="/publications">ACM venues</a> (ICAIL, SIGIR) and translate that research into practice as Associate Director of Data Science at Elevate Law.
+      </p>
+      <p>
+        In parallel, I build curricula and teach: explaining precision, recall, and F<sub>1</sub> to legal operations teams; running tutorials on TAR for the IR community; and mentoring junior analysts through the reality of evaluating ML systems under partial labels. I'm currently exploring instructor and lecturer roles where industry experience can sit inside the classroom rather than alongside it.
+      </p>
+      <p>
+        Based in Washington, DC. <a href="/speaking">Available for invited talks</a>, panels, and teaching engagements.
+      </p>
+    </div>
+
+    <div class="about-actions">
+      <a class="cv-button" href="/cv/LDG-resume.pdf" download>
+        <svg viewBox="0 0 16 16"><path d="M8 2v9M4 7l4 4 4-4M2 13h12" /></svg>
+        Download Resume (PDF)
+      </a>
+    </div>
+
+    <div class="about-actions">
+      <a class="cv-button" href="/cv/LDG-cv.pdf" download>
+        <svg viewBox="0 0 16 16"><path d="M8 2v9M4 7l4 4 4-4M2 13h12" /></svg>
+        Download CV (PDF)
+      </a>
+    </div>
+  </div>
+
+  <!-- Education -->
+  <section class="about-grid">
+    <div class="label">Education</div>
+    <ul class="cv-list">
+      <li class="cv-item">
+        <div>
+          <p class="title">M.S., Data Science</p>
+          <p class="place">Johns Hopkins University</p>
+        </div>
+        <span class="when">2024</span>
+      </li>
+      <li class="cv-item">
+        <div>
+          <p class="title">B.S., Computer Science</p>
+          <p class="place">Florida Atlantic University</p>
+        </div>
+        <span class="when">2021</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Experience -->
+  <section class="about-grid">
+    <div class="label">Experience</div>
+    <ul class="cv-list">
+      <li class="cv-item">
+        <div>
+          <p class="title">Associate Director, Data Science</p>
+          <p class="place">Elevate Law · Washington, DC</p>
+        </div>
+        <span class="when">Nov 2022 — present</span>
+        <p class="desc">
+          Lead client-facing analytics engagements. Design exploratory analysis and predictive modeling workflows in Python. Build visualizations and documentation that translate technical evaluation into actionable guidance for legal teams and non-technical stakeholders.
+        </p>
+      </li>
+      <li class="cv-item">
+        <div>
+          <p class="title">Data Scientist</p>
+          <p class="place">Redgrave Data</p>
+        </div>
+        <span class="when">Oct 2021 — Nov 2022</span>
+        <p class="desc">
+          Conducted exploratory analysis and statistical modeling on structured and unstructured datasets. Designed predictive models supporting technology-assisted review workflows in legal analytics.
+        </p>
+      </li>
+      <li class="cv-item">
+        <div>
+          <p class="title">Senior Advisor</p>
+          <p class="place">Redgrave LLP</p>
+        </div>
+        <span class="when">Oct 2021 — Nov 2022</span>
+        <p class="desc">
+          Led technical aspects of consulting engagements involving large-scale data analysis and legal technology workflows.
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Awards -->
+  <section class="about-grid">
+    <div class="label">Awards</div>
+    <ul class="cv-list">
+      <li class="cv-item">
+        <div>
+          <p class="title">Relativity AI Visionary Award</p>
+          <p class="place">For contributions to applied AI in legal practice</p>
+        </div>
+        <span class="when">2024</span>
+      </li>
+      <li class="cv-item">
+        <div>
+          <p class="title">Best Paper</p>
+          <p class="place">International Conference on Artificial Intelligence and Law (ICAIL)</p>
+        </div>
+        <span class="when">2023</span>
+      </li>
+      <li class="cv-item">
+        <div>
+          <p class="title">Master's Fellowship</p>
+          <p class="place">National GEM Consortium</p>
+        </div>
+        <span class="when">2021</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Focus -->
+  <section class="about-grid">
+    <div class="label">Focus</div>
+    <div>
+      <div class="tag-row">
+        <span class="tag">Information retrieval</span>
+        <span class="tag">Technology-assisted review</span>
+        <span class="tag">High-recall retrieval</span>
+        <span class="tag">Statistical evaluation</span>
+        <span class="tag">Generative AI in regulated industries</span>
+        <span class="tag">Python</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Tableau · AWS QuickSight</span>
+        <span class="tag">Technical communication</span>
+        <span class="tag">Curriculum design</span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 { font-size: clamp(36px, 4.5vw, 48px); margin: 0 0 32px; }
+  .about-intro { max-width: 62ch; }
+  .lead-bio {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(20px, 2.2vw, 24px);
+    line-height: 1.45;
+    font-weight: 400;
+    color: var(--text);
+    max-width: 38ch;
+    margin: 0 0 32px;
+  }
+  .prose p {
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 62ch;
+    color: var(--text);
+  }
+  .prose a {
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .prose a:hover { border-bottom-color: var(--accent); }
+
+  .about-actions { margin-top: 32px; }
+  .cv-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: var(--forest);
+    color: var(--cream);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.15s;
+  }
+  .cv-button:hover { background: #234035; }
+  .cv-button svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 28px;
+    padding: 32px 0;
+    border-top: 0.5px solid var(--border);
+  }
+  .about-grid:last-of-type { border-bottom: 0.5px solid var(--border); }
+  .about-grid .label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-top: 4px;
+  }
+  .cv-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .cv-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: baseline;
+  }
+  .cv-item .title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--heading);
+    line-height: 1.3;
+    margin: 0 0 2px;
+  }
+  .cv-item .place { font-size: 14px; color: var(--text); margin: 0; }
+  .cv-item .when {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .cv-item .desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 6px 0 0;
+    grid-column: 1 / -1;
+    max-width: 62ch;
+  }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 0.5px solid var(--border);
+    background: var(--surface);
+  }
+
+  @media (max-width: 640px) {
+    .about-grid { grid-template-columns: 1fr; gap: 8px; }
+    .cv-item { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>

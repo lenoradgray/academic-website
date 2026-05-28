@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PublicationCard from '../components/PublicationCard.astro';
+
+const pubs = await getCollection('publications');
+const featured = pubs
+  .filter((p) => p.data.home)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const talks = await getCollection('talks');
+const latestTalk = talks.sort((a, b) => b.data.date.localeCompare(a.data.date))[0];
+const latestPaper = pubs.sort((a, b) => b.data.year - a.data.year)[0];
+---
+
+<BaseLayout
+  title="Lenora Gray — data scientist & technical educator"
+  description="Lenora Gray is a data scientist and applied AI researcher working on technology-assisted review, high-recall retrieval, and applied machine learning in legal settings."
+  current="home"
+>
+  <section class="hero">
+    <h1>Lenora Gray</h1>
+    <p class="lead">
+      I build and evaluate machine-learning systems for high-recall retrieval, and teach the methods behind them to legal, policy, and engineering audiences.
+    </p>
+    <div class="hero-meta">
+      <span><strong>Associate Director, Data Science</strong> &nbsp;·&nbsp; Elevate Law</span>
+      <span>Washington, DC</span>
+    </div>
+  </section>
+
+  <!-- Recent highlights -->
+  <section class="block" aria-labelledby="recent-h">
+    <div class="sect-head">
+      <h2 id="recent-h">Recent</h2>
+      <span class="count">latest activity</span>
+    </div>
+
+    <div class="recent-grid">
+      {latestPaper && (
+        <a class="hl" href="/publications">
+          <div class="hl-eyebrow">
+            <span class="label">Latest paper</span>
+            <span class="date">{latestPaper.data.year}</span>
+          </div>
+          <h3>{latestPaper.data.title}</h3>
+          <div class="venue">{latestPaper.data.venue}</div>
+          <span class="more">Read paper</span>
+        </a>
+      )}
+
+      {latestTalk && (
+        <a class="hl" href="/speaking">
+          <div class="hl-eyebrow">
+            <span class="label">Latest talk</span>
+            <span class="date">{latestTalk.data.dateLabel}</span>
+          </div>
+          <h3>{latestTalk.data.title}</h3>
+          <div class="venue">{latestTalk.data.event}</div>
+          <span class="more">See all talks</span>
+        </a>
+      )}
+
+      <a class="hl" href="https://www.relativity.com/ai-visionaries/ai-visionaries-2024/#lenora-gray">
+        <div class="hl-eyebrow">
+          <span class="label">Recognition</span>
+          <span class="date">2024</span>
+        </div>
+        <h3>Relativity AI Visionary Award</h3>
+        <div class="venue">Applied AI in legal practice</div>
+        <span class="more">About</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured publications -->
+  <section class="block" aria-labelledby="featured-h">
+    <div class="sect-head">
+      <h2 id="featured-h">Featured publications</h2>
+      <a class="count" href="/publications" style="color: var(--accent); border-bottom: 0.5px solid currentColor; padding-bottom: 1px;">View all →</a>
+    </div>
+
+    {featured.map((p) => (
+      <PublicationCard pub={p} expandable={false} />
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding: 0 0 64px; }
+  .hero h1 { margin: 0 0 28px; max-width: 12ch; }
+  .lead { max-width: 38ch; margin: 0 0 36px; }
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+  .hero-meta strong { color: var(--text); font-weight: 500; }
+
+  .block + .block { margin-top: 80px; }
+
+  .recent-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 820px) { .recent-grid { grid-template-columns: 1fr; } }
+
+  .hl-eyebrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .hl-eyebrow .label { color: var(--heading); flex-shrink: 0; }
+  .hl-eyebrow .date  { color: var(--text-muted); flex-shrink: 0; }
+  .hl h3 { font-size: 17px; line-height: 1.3; margin: 0; }
+  .hl .venue {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+  .hl .more {
+    margin-top: auto;
+    font-size: 13px;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 6px;
+  }
+  .hl .more::after { content: "→"; transition: transform 0.2s; }
+  .hl:hover .more::after { transform: translateX(3px); }
+</style>

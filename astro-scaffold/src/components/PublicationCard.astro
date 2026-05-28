@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  pub: CollectionEntry<'publications'>;
+  /** Render the abstract as an expandable <details> element */
+  expandable?: boolean;
+}
+const { pub, expandable = true } = Astro.props;
+const d = pub.data;
+
+const typeLabel = {
+  conference: 'Conference paper',
+  tutorial:   'Tutorial',
+  preprint:   'Preprint',
+  journal:    'Journal article',
+}[d.type];
+
+const authorParts = d.authors.map((a) =>
+  a === d.me
+    ? `<span class="me">${a}</span>`
+    : a
+);
+const authorsHtml = authorParts.join(', ');
+---
+
+<article class="entry" data-type={d.type}>
+  <div class="entry-meta">
+    <span class="year">{d.year}</span>
+    {d.venue}<br />
+    {d.location && (<>{d.location}<br /></>)}
+    {d.date}
+  </div>
+  <div class="entry-body">
+    <div class="entry-badges">
+      <span class="badge badge--type">{typeLabel}</span>
+      {d.featured && <span class="badge badge--featured">Best paper</span>}
+      {d.venueLong && <span class="badge badge--venue">{d.venueLong}</span>}
+    </div>
+    <h3 class="entry-title">{d.title}</h3>
+    <p class="entry-authors" set:html={authorsHtml}></p>
+
+    {d.abstract && expandable && (
+      <details class="entry-abstract">
+        <summary>Abstract <span class="chev">˅</span></summary>
+        <p class="entry-desc">{d.abstract}</p>
+      </details>
+    )}
+    {d.abstract && !expandable && (
+      <p class="entry-desc">{d.abstract}</p>
+    )}
+
+    <div class="entry-links">
+      {d.links.pdf && <a href={d.links.pdf}>PDF</a>}
+      {d.links.acm && <a href={d.links.acm}>ACM DL</a>}
+      {d.links.doi && <a href={d.links.doi}>DOI</a>}
+      {d.links.arxiv && <a href={d.links.arxiv}>arXiv</a>}
+      {d.links.slides && <a href={d.links.slides}>Slides</a>}
+      {d.links.cite && <a href={d.links.cite}>Cite</a>}
+      {d.links.ieee && <a href={d.links.ieee}>IEEE</a>}
+      {d.links.website && <a href={d.links.website}>website</a>}
+    </div>
+  </div>
+</article>
+
+<style is:global>
+  .entry-abstract { margin: 4px 0 14px; max-width: 62ch; }
+  .entry-abstract summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 2px 0;
+    border-bottom: 0.5px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .entry-abstract summary::-webkit-details-marker { display: none; }
+  .entry-abstract summary:hover {
+    color: var(--heading);
+    border-bottom-color: var(--sand);
+  }
+  .entry-abstract summary .chev {
+    display: inline-block;
+    transition: transform 0.2s;
+    font-size: 13px;
+  }
+  .entry-abstract[open] summary .chev { transform: rotate(180deg); }
+  .entry-abstract .entry-desc { margin: 12px 0 0; }
+
+  .entry[hidden] { display: none; }
+</style>

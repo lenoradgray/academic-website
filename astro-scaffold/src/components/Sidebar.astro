@@ -1,0 +1,136 @@
+---
+/**
+ * Sidebar — persistent left navigation
+ * Pass current="home" | "publications" | "speaking" | "about" | "contact"
+ */
+interface Props {
+  current?: 'home' | 'publications' | 'speaking' | 'about' | 'contact';
+}
+const { current = 'home' } = Astro.props;
+
+const links = [
+  { href: '/',             label: 'Home',         key: 'home' },
+  { href: '/publications', label: 'Publications', key: 'publications' },
+  { href: '/speaking',     label: 'Speaking',     key: 'speaking' },
+  { href: '/about',        label: 'About',        key: 'about' },
+  { href: '/contact',      label: 'Contact',      key: 'contact' },
+] as const;
+---
+
+<aside class="side" aria-label="Site navigation">
+  <div class="side-photo">
+    <img src="/assets/headshot-burgundy.jpg" alt="Portrait of Lenora Gray" class="headshot-img" />
+  </div>
+
+  <div class="side-id">
+    <a href="/" class="name">Lenora Gray</a>
+    <div class="role">
+      Data scientist<br />
+      Technical educator
+    </div>
+  </div>
+
+  <nav>
+    <ul class="side-nav">
+      {links.map((l) => (
+        <li>
+          <a href={l.href} class:list={[{ 'is-current': l.key === current }]}>{l.label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="side-foot">
+    <a href="/contact">Contact</a>
+    <a href="https://scholar.google.com/citations?user=HYfXV94AAAAJ&hl=en&oi=ao" rel="me">Google Scholar</a>
+    <a href="https://github.com/lenoradgray" rel="me">GitHub</a>
+    <a href="https://www.linkedin.com/in/lenorag/" rel="me">LinkedIn</a>
+    <div class="copyright">© {new Date().getFullYear()} Lenora Gray</div>
+  </div>
+</aside>
+
+<style>
+  .side-photo {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .headshot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .side-id .name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--heading);
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-decoration: none;
+    display: block;
+  }
+  .side-id .role {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .side-nav {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .side-nav a {
+    display: block;
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text);
+    border-bottom: 0.5px solid transparent;
+    width: fit-content;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .side-nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .side-nav a.is-current {
+    color: var(--heading);
+    border-bottom-color: var(--heading);
+  }
+
+  .side-foot {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .side-foot a {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    transition: color 0.15s;
+  }
+  .side-foot a:hover { color: var(--accent); }
+  .side-foot .copyright {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    margin-top: 18px;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 820px) {
+    .side-photo { width: 56px; height: 56px; }
+    .side-nav   { flex-direction: row; gap: 16px; margin: 0; flex-basis: 100%; }
+    .side-foot  { display: none; }
+  }
+</style>

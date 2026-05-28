@@ -1,0 +1,50 @@
+---
+import '../styles/global.css';
+import Sidebar from '../components/Sidebar.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: 'home' | 'publications' | 'speaking' | 'about' | 'contact';
+}
+const { title, description, current } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <Sidebar current={current} />
+
+      <main id="main" class="main">
+        <slot />
+      </main>
+    </div>
+
+    <style is:global>
+      .skip { position: absolute; left: -9999px; }
+      .skip:focus {
+        left: 16px;
+        top: 16px;
+        background: var(--surface);
+        padding: 8px 12px;
+        z-index: 100;
+      }
+    </style>
+  </body>
+</html>

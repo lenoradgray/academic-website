@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TalkCard from '../components/TalkCard.astro';
+
+const talks = await getCollection('talks');
+const upcoming = talks
+  .filter((t) => t.data.upcoming)
+  .sort((a, b) => a.data.date.localeCompare(b.data.date));
+const past = talks
+  .filter((t) => !t.data.upcoming)
+  .sort((a, b) => b.data.date.localeCompare(a.data.date));
+
+const byYear = past.reduce<Record<number, typeof past>>((acc, t) => {
+  (acc[t.data.year] ||= []).push(t);
+  return acc;
+}, {});
+---
+
+<BaseLayout
+  title="Speaking — Lenora Gray"
+  description="Past and upcoming talks, panels, workshops, and tutorials by Lenora Gray."
+  current="speaking"
+>
+  <div class="pubs-intro">
+    <h1>Speaking</h1>
+    <p class="lead">
+      Invited talks, conference workshops, panels, and tutorials — primarily on technology-assisted review, generative AI in regulated industries, and the practice of communicating ML to non-technical stakeholders.
+    </p>
+    <div class="meta">
+      {talks.length} engagements ·
+      <a href="/contact">Invite to speak →</a>
+    </div>
+  </div>
+
+  <!-- Upcoming -->
+  <h3 class="year-head"><span class="upcoming-dot"></span>Upcoming</h3>
+  {upcoming.length > 0 ? (
+    upcoming.map((t) => <TalkCard talk={t} />)
+  ) : (
+    <div class="upcoming-empty">
+      <div class="meta">Nothing<br />scheduled<br />yet</div>
+      <div class="body">
+        <p>
+          No talks currently on the calendar. If you're hosting an event on AI, technology-assisted review, or applied ML in regulated industries, <a href="/contact">get in touch</a> to invite me to speak.
+        </p>
+      </div>
+    </div>
+  )}
+
+  {Object.entries(byYear)
+    .sort(([a], [b]) => Number(b) - Number(a))
+    .map(([year, entries]) => (
+      <>
+        <h3 class="year-head">{year}</h3>
+        {entries.map((t) => <TalkCard talk={t} />)}
+      </>
+    ))}
+</BaseLayout>
+
+<style>
+  .pubs-intro { max-width: 58ch; margin: 0 0 56px; }
+  .pubs-intro h1 { font-size: clamp(36px, 4.5vw, 48px); margin: 0 0 24px; }
+  .pubs-intro .lead {
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .pubs-intro .meta {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 14px;
+    letter-spacing: 0.04em;
+  }
+  .pubs-intro .meta a {
+    color: var(--accent);
+    border-bottom: 0.5px solid currentColor;
+    padding-bottom: 1px;
+  }
+
+  .upcoming-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--highlight);
+    margin-right: 8px;
+    vertical-align: 2px;
+  }
+
+  .upcoming-empty {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 28px;
+    padding: 28px 0;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .upcoming-empty .meta {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    padding-top: 4px;
+    line-height: 1.6;
+  }
+  .upcoming-empty .body p {
+    margin: 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    font-style: italic;
+    max-width: 56ch;
+  }
+  .upcoming-empty .body a {
+    color: var(--accent);
+    font-style: normal;
+    border-bottom: 0.5px solid currentColor;
+    padding-bottom: 1px;
+  }
+  @media (max-width: 640px) {
+    .upcoming-empty { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
