@@ -122,7 +122,7 @@ const MESSAGE_MAX = 2000;
     </div>
     <div class="channel">
       <span class="key">Google Scholar</span>
-      <a class="value" href="#">scholar.google.com/lenoragray</a>
+      <a class="value" href="https://scholar.google.com/citations?user=HYfXV94AAAAJ&hl=en&oi=ao">scholar.google.com/lenoragray</a>
       <span class="hint">Citations, papers, and metrics.</span>
     </div>
     <div class="channel">
@@ -132,117 +132,111 @@ const MESSAGE_MAX = 2000;
     </div>
     <div class="channel">
       <span class="key">LinkedIn</span>
-      <a class="value" href="#">linkedin.com/in/lenoragray</a>
+      <a class="value" href="https://www.linkedin.com/in/lenorag/">linkedin.com/in/lenoragray</a>
       <span class="hint">Professional history and updates.</span>
     </div>
   </div>
 </BaseLayout>
 
 <script>
-  const form    = document.getElementById('contact-form') as HTMLFormElement | null;
-  const status  = document.getElementById('cf-status') as HTMLDivElement | null;
-  const submit  = document.getElementById('cf-submit') as HTMLButtonElement | null;
-  const tsField = document.getElementById('cf-ts')     as HTMLInputElement | null;
-  const message = document.getElementById('cf-message') as HTMLTextAreaElement | null;
-  const counter = document.getElementById('cf-counter') as HTMLSpanElement | null;
+  (function () {
+    const form    = document.getElementById('contact-form');
+    const status  = document.getElementById('cf-status');
+    const submit  = document.getElementById('cf-submit');
+    const tsField = document.getElementById('cf-ts');
+    const message = document.getElementById('cf-message');
+    const counter = document.getElementById('cf-counter');
+    if (!form || !status || !submit || !tsField) return;
 
-  if (form && status && submit && tsField) {
-    // 1. Stamp render time (for timestamp check)
+    // 1. Stamp render time (timestamp check)
     const renderedAt = Date.now();
     tsField.value = String(renderedAt);
 
-    // 2. Live character counter on message
-    const MAX = Number(message?.getAttribute('maxlength') || 2000);
-    const updateCounter = () => {
+    // 2. Live character counter
+    const MAX = Number((message && message.getAttribute('maxlength')) || 2000);
+    function updateCounter() {
       if (!message || !counter) return;
       const n = message.value.length;
-      counter.textContent = ${n} / ${MAX};
+      counter.textContent = n + ' / ' + MAX;
       counter.classList.toggle('near-limit', n > MAX * 0.9);
-    };
-    message?.addEventListener('input', updateCounter);
+    }
+    if (message) message.addEventListener('input', updateCounter);
 
-    // 3. Per-field validation helpers
-    type FieldKey = 'name' | 'email' | 'subject' | 'message';
-    const errEl = (k: FieldKey) => document.getElementById('err-' + k) as HTMLSpanElement | null;
-    const inEl  = (k: FieldKey) => form.querySelector<HTMLInputElement | HTMLTextAreaElement>([name="${k}"]);
-
-    const setError = (k: FieldKey, msg: string) => {
-      const el = inEl(k);
-      const err = errEl(k);
-      if (el)  el.setAttribute('aria-invalid', 'true');
-      if (el)  el.classList.add('is-invalid');
-      if (err) err.textContent = msg;
-    };
-    const clearError = (k: FieldKey) => {
-      const el = inEl(k);
-      const err = errEl(k);
-      if (el)  el.removeAttribute('aria-invalid');
-      if (el)  el.classList.remove('is-invalid');
-      if (err) err.textContent = '';
-    };
+    // 3. Per-field validation
+    const FIELDS = ['name', 'email', 'subject', 'message'];
     const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    function errEl(k) { return document.getElementById('err-' + k); }
+    function inEl(k)  { return form.querySelector('[name="' + k + '"]'); }
 
-    const validate = (): boolean => {
+    function setError(k, msg) {
+      const el = inEl(k); const err = errEl(k);
+      if (el)  { el.setAttribute('aria-invalid', 'true'); el.classList.add('is-invalid'); }
+      if (err) err.textContent = msg;
+    }
+    function clearError(k) {
+      const el = inEl(k); const err = errEl(k);
+      if (el)  { el.removeAttribute('aria-invalid'); el.classList.remove('is-invalid'); }
+      if (err) err.textContent = '';
+    }
+    function validate() {
       let ok = true;
-      const get = (k: FieldKey) => (inEl(k)?.value || '').trim();
-
-      if (!get('name'))    { setError('name',    'Please enter your name.');           ok = false; } else clearError('name');
-      if (!get('email'))   { setError('email',   'Please enter your email.');          ok = false; }
+      function get(k) { const el = inEl(k); return (el && el.value ? el.value : '').trim(); }
+      if (!get('name'))    { setError('name',    'Please enter your name.');     ok = false; } else clearError('name');
+      if (!get('email'))   { setError('email',   'Please enter your email.');    ok = false; }
       else if (!EMAIL_RE.test(get('email'))) { setError('email', 'That email doesn\u2019t look right.'); ok = false; }
       else clearError('email');
-      if (!get('subject')) { setError('subject', 'Please add a short subject.');       ok = false; } else clearError('subject');
-      if (!get('message')) { setError('message', 'Please include a message.');         ok = false; } else clearError('message');
-
+      if (!get('subject')) { setError('subject', 'Please add a short subject.'); ok = false; } else clearError('subject');
+      if (!get('message')) { setError('message', 'Please include a message.');   ok = false; } else clearError('message');
       return ok;
-    };
-
-    // Clear an error as soon as the user starts fixing it
-    (['name','email','subject','message'] as FieldKey[]).forEach((k) => {
-      inEl(k)?.addEventListener('input', () => {
-        if (inEl(k)?.getAttribute('aria-invalid') === 'true') clearError(k);
+    }
+    FIELDS.forEach(function (k) {
+      const el = inEl(k);
+      if (!el) return;
+      el.addEventListener('input', function () {
+        if (el.getAttribute('aria-invalid') === 'true') clearError(k);
       });
     });
 
-    // 4. Submit handler
-    const showSuccess = () => {
+    // 4. Status messages
+    function showSuccess() {
       status.className = 'form-status is-success';
-      status.textContent = 'Thanks — your message is on its way. I\u2019ll reply soon.';
+      status.textContent = 'Thanks \u2014 your message is on its way. I\u2019ll reply soon.';
       form.reset();
       tsField.value = String(Date.now());
       updateCounter();
-    };
-    const showError = (msg: string) => {
+    }
+    function showError(msg) {
       status.className = 'form-status is-error';
       status.textContent = msg;
-    };
+    }
 
-    form.addEventListener('submit', async (e) => {
+    // 5. Submit
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
       status.className = 'form-status';
       status.textContent = '';
 
       // Spam check A: honeypot
-      const honey = (form.querySelector<HTMLInputElement>('[name="_gotcha"]')?.value || '').trim();
+      const honeyEl = form.querySelector('[name="_gotcha"]');
+      const honey = ((honeyEl && honeyEl.value) || '').trim();
       // Spam check B: timestamp
       const elapsed = Date.now() - renderedAt;
-
       if (honey || elapsed < 3000) {
-        // Fail silently — bots see a normal success
-        showSuccess();
+        showSuccess(); // fail silently
         return;
       }
 
       if (!validate()) {
-        // Focus first invalid field for accessibility
-        form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        const first = form.querySelector('[aria-invalid="true"]');
+        if (first && typeof first.focus === 'function') first.focus();
         return;
       }
 
       // Loading state
       submit.disabled = true;
       submit.classList.add('is-loading');
-      const labelEl = submit.querySelector<HTMLSpanElement>('.form-submit-label');
-      const prevLabel = labelEl?.textContent || 'Send message';
+      const labelEl = submit.querySelector('.form-submit-label');
+      const prevLabel = labelEl ? labelEl.textContent : 'Send message';
       if (labelEl) labelEl.textContent = 'Sending\u2026';
 
       try {
@@ -255,15 +249,14 @@ const MESSAGE_MAX = 2000;
         if (res.ok) {
           showSuccess();
         } else {
-          // Try to surface Formspree's error if present
           let detail = '';
           try {
             const data = await res.json();
-            if (Array.isArray(data?.errors) && data.errors[0]?.message) {
-              detail = ' — ' + data.errors[0].message;
+            if (data && Array.isArray(data.errors) && data.errors[0] && data.errors[0].message) {
+              detail = ' \u2014 ' + data.errors[0].message;
             }
-          } catch {}
-          showError('Something went wrong sending your message' + detail + '. Please try again, or email me directly.');
+          } catch (_) {}
+          showError('Something went wrong sending your message' + detail + '. Please try again, or reach out via the channels below.');
         }
       } catch (err) {
         showError('Network error. Please check your connection and try again.');
@@ -275,7 +268,7 @@ const MESSAGE_MAX = 2000;
     });
 
     updateCounter();
-  }
+  })();
 </script>
 
 <style>
