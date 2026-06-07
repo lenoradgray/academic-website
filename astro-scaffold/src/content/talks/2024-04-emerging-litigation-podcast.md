@@ -1,5 +1,5 @@
 ---
-title: "The current state of discovery technology"
+title: "The Current State of Discovery Technology"
 event: "Emerging Litigation podcast, hosted by Sara Lord"
 type: "podcast"
 year: 2024

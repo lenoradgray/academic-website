@@ -1,5 +1,5 @@
 ---
-title: "Generative AI and information governance: the good, the bad, the ugly"
+title: "Generative AI and Information Governance: The good, the bad, the ugly"
 event: "ARMA International Infocon 2023"
 type: "keynote"
 year: 2023

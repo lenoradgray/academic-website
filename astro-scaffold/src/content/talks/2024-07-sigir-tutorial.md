@@ -1,5 +1,5 @@
 ---
-title: "Technology-assisted review for high-recall retrieval"
+title: "Technology-Assisted Review for High-Recall Retrieval"
 event: "47th ACM SIGIR Conference on Research and Development in Information Retrieval"
 type: "tutorial"
 year: 2024

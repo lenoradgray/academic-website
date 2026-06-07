@@ -1,5 +1,5 @@
 ---
-title: "Technology-assisted review for high-recall retrieval"
+title: "Technology-Assisted Review for High-Recall Retrieval"
 event: "20th International Conference on Artificial Intelligence and Law"
 type: "workshop"
 year: 2025

@@ -1,5 +1,5 @@
 ---
-title: "What does a data scientist do in legal?"
+title: "What Does a Data Scientist Do in Legal?"
 event: "ILTACON 2024"
 type: "panel"
 year: 2024

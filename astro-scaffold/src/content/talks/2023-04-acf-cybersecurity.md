@@ -1,5 +1,5 @@
 ---
-title: "ChatGPT — AI conversations, capabilities, and caveats"
+title: "ChatGPT — AI conversations, Capabilities, and Caveats"
 event: "Administration for Children and Families, Cybersecurity Division"
 type: "invited"
 year: 2023
