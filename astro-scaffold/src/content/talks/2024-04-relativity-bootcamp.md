@@ -1,5 +1,5 @@
 ---
-title: "Responsible AI: shaping the future of ethical technology"
+title: "Responsible AI: Shaping the future of ethical technology"
 event: "Relativity AI Bootcamp 2024"
 type: "panel"
 year: 2024
